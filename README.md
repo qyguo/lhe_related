@@ -4,6 +4,7 @@ cd YOURPATH/MG5_aMC_v2_7_3
 cp -r /data/pubfs/pku_visitor/guoqianying/public/cards/ YOURPATH/MG5_aMC_v2_7_3/../
 
 LO:
+
 ./bin/mg5_aMC ../cards/ppeem_EZ/proc_card.dat
 ./bin/mg5_aMC ../cards/ppeem_ESZ/proc_card.dat
 ./bin/mg5_aMC ../cards/ppeem_SZ/proc_card.dat
@@ -49,4 +50,24 @@ gunzip ppeem_Z_2_unweighted_events.lhe.gz
 python lhe.py ppeem_Z_2_unweighted_events
 root -l -b -q draw_1f.cc\(\"ppeem_Z_2_unweighted_events\"\)
 root -l -b -q ./draw_1f_plus.cc
+
+
+NLO:
+
+./bin/mg5_aMC  ../cards/ppllm_NLO/proc_card.dat
+sed -i "s/HERWIG6   = parton_shower/PYTHIA8   = parton_shower/" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*= fixed_fac_scale/ True     = fixed_fac_scale/" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*= fixed_ren_scale/ True     = fixed_ren_scale/" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*= nevents / 100 = nevents /" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*= jetalgo / -1.0  = jetalgo /" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*= jetradius /  0.4   = jetradius /" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*= ptj /  5.0   = ptj /" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*= ptgmin /  0.0   = ptgmin /" ppllm_NLO/Cards/run_card.dat
+sed -i "s/^.*hadronize    = T /hadronize    = F /" ppllm_NLO/Cards/shower_card.dat 
+sed -i "s/^.*njmax      = 0 /njmax      = -1.0 /" ppllm_NLO/Cards/shower_card.dat
+sed -i "s/extralibs.*/extralibs    = stdhep Fmcfio dl     # Extra-libraries (not LHAPDF)/" ppllm_NLO/Cards/shower_card.dat
+sed -i "s/EXTRALIBS.*/EXTRALIBS    = stdhep Fmcfio dl     # Extra-libraries (not LHAPDF)/" ppllm_NLO/Cards/shower_card.dat
+./ppllm_NLO/bin/generate_events
+./ppllm_NLO/bin/calculate_xsect
+
 
